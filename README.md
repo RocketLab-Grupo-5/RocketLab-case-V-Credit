@@ -8,6 +8,10 @@ A V-Credit enfrenta aumento do volume de atendimentos, custos operacionais cresc
 
 O projeto estrutura essas bases em camadas, documenta as inconsistências encontradas e os tratamentos aplicados, e entrega um modelo dimensional sobre o qual são feitas as análises de negócio. Os dados cobrem atendimentos de janeiro de 2025 a julho de 2026.
 
+## Apresentação
+
+Os slides da apresentação do case estão disponíveis [neste link](https://docs.google.com/presentation/d/16NPZnS3nnxk9j6pMYl0H5jnPxBhstGfC/edit?usp=sharing&ouid=115454221769414547808&rtpof=true&sd=true).
+
 ## Estrutura do repositório
 
 ```
@@ -27,12 +31,14 @@ O projeto estrutura essas bases em camadas, documenta as inconsistências encont
     V-Credit_ETL_Pipeline.yaml       definição do job de orquestração
     img_success_graph.png            execução bem-sucedida do job, em grafo
     img_success_sequence.png         execução bem-sucedida do job, em sequência
+06_power_bi/
+    vcredit.pbix                     painéis do Power BI sobre a Gold
 README.md
 ```
 
 Os notebooks de `analysis` e de `04_business_analysis` não fazem parte do pipeline. Eles documentam as investigações que embasam os tratamentos e as conclusões de negócio.
 
-A pasta `05_jobs_pipeline` guarda a definição do job que executa o pipeline e os registros de uma execução bem-sucedida.
+A pasta `05_jobs_pipeline` guarda a definição do job que executa o pipeline e os registros de uma execução bem-sucedida. A pasta `06_power_bi` contém o arquivo do Power BI com os painéis construídos sobre a Gold.
 
 ## Arquitetura
 
@@ -107,8 +113,10 @@ Os caminhos também pressupõem que o repositório foi clonado como Git folder n
 
 ## Análises de negócio
 
-`Analises_de_Negocio` reúne as consultas sobre a Gold, organizadas pelas dores relatadas por cada parte interessada da V-Credit: Gerente Financeiro, Coordenadora de Customer Success, Diretor de Tecnologia, Diretora de Marketing e atendentes.
+`Analises_de_Negocio` reúne as consultas sobre a Gold, organizadas pelas dores relatadas por cada parte interessada da V-Credit: Gerente Financeiro, Coordenadora de Customer Success, Diretor de Tecnologia, Diretora de Marketing e atendentes. Parte dessas análises também é apresentada nos painéis do Power BI, descritos na seção seguinte.
 
 ## Visualização
 
-O Databricks Free Edition não tem integração nativa com o Power BI. Para os painéis, as tabelas da Gold são exportadas em CSV e importadas no Power BI, onde as relações entre a fato e as dimensões são recriadas.
+O arquivo `06_power_bi/vcredit.pbix` reúne os painéis construídos sobre a Gold. Eles respondem a parte das dores levantadas pelas partes interessadas, organizando em tabelas as análises feitas e as oportunidades de melhoria identificadas para a operação de atendimento.
+
+O Databricks Free Edition não tem integração nativa com o Power BI. Por isso, as tabelas da Gold são exportadas em CSV e importadas no Power BI, onde as relações entre a fato e as dimensões são recriadas. Como os dados ficam salvos no próprio arquivo, ele pode ser aberto no Power BI Desktop sem acesso ao Databricks.
