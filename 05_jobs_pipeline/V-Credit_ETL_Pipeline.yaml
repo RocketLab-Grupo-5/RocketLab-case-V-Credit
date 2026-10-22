@@ -1,0 +1,90 @@
+resources:
+  jobs:
+    V_Credit_ETL_Pipeline:
+      name: V-Credit ETL Pipeline
+      schedule:
+        quartz_cron_expression: 0 0 12 * * ?
+        timezone_id: America/Sao_Paulo
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/01_bronze/Bronze_Layer
+            source: WORKSPACE
+          timeout_seconds: 1200
+        - task_key: Bronze_to_Silver-Atendentes
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Base_Atendentes
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Canais
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Canais
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Chamados
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Chamados
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Chamados_Hora
+          depends_on:
+            - task_key: Landing_to_Bronze
+            - task_key: Bronze_to_Silver-Chamados
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Chamados_Hora
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Clientes
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Clientes
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Custos
+          depends_on:
+            - task_key: Landing_to_Bronze
+            - task_key: Bronze_to_Silver-Chamados
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Custos
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Motivos
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Base_Motivos
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Bronze_to_Silver-Pesquisa_Satisfacao
+          depends_on:
+            - task_key: Landing_to_Bronze
+            - task_key: Bronze_to_Silver-Chamados
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Pesquisa_Satisfacao
+            source: WORKSPACE
+          timeout_seconds: 1800
+        - task_key: Silver_to_Gold
+          depends_on:
+            - task_key: Bronze_to_Silver-Atendentes
+            - task_key: Bronze_to_Silver-Pesquisa_Satisfacao
+            - task_key: Bronze_to_Silver-Custos
+            - task_key: Bronze_to_Silver-Canais
+            - task_key: Bronze_to_Silver-Clientes
+            - task_key: Bronze_to_Silver-Motivos
+            - task_key: Bronze_to_Silver-Chamados
+            - task_key: Bronze_to_Silver-Chamados_Hora
+          notebook_task:
+            notebook_path: /Workspace/Users/your@email.com/RocketLab-case-V-Credit/03_gold/Gold_Layer
+            source: WORKSPACE
+          timeout_seconds: 1800
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
