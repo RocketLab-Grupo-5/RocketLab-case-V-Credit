@@ -23,10 +23,16 @@ O projeto estrutura essas bases em camadas, documenta as inconsistências encont
     Gold_Layer.ipynb                 modelo dimensional e validações
 04_business_analysis/
     Analises_de_Negocio.ipynb        análises sobre a Gold, por parte interessada
+05_jobs_pipeline/
+    V-Credit_ETL_Pipeline.yaml       definição do job de orquestração
+    img_success_graph.png            execução bem-sucedida do job, em grafo
+    img_success_sequence.png         execução bem-sucedida do job, em sequência
 README.md
 ```
 
 Os notebooks de `analysis` e de `04_business_analysis` não fazem parte do pipeline. Eles documentam as investigações que embasam os tratamentos e as conclusões de negócio.
+
+A pasta `05_jobs_pipeline` guarda a definição do job que executa o pipeline e os registros de uma execução bem-sucedida.
 
 ## Arquitetura
 
@@ -75,10 +81,29 @@ Os notebooks devem ser executados nesta ordem:
 4. Silver de `custos`, `pesquisa_satisfacao`, `chamados_hora`
 5. `Gold_Layer`
 
-A mesma ordem é usada nas tarefas do job de atualização. Os CSVs de origem devem estar no volume `vcredit_medallion.bronze.landing` antes da primeira execução.
+A mesma ordem é usada nas tarefas do job de orquestração, descrito na seção seguinte. Os CSVs de origem devem estar no volume `vcredit_medallion.bronze.landing` antes da primeira execução.
 
 O pipeline é idempotente: executá-lo de novo sobre os mesmos arquivos produz as mesmas tabelas na Silver e na Gold, porque a Silver considera apenas a carga mais recente de cada registro e as duas camadas são regravadas a cada execução.
 
+## Orquestração
+
+O job que executa o pipeline está definido em `05_jobs_pipeline/V-Credit_ETL_Pipeline.yaml`.
+
+### Configuração do YAML
+
+Nos caminhos dos notebooks, o e-mail do usuário foi substituído pelo placeholder `your@email.com`. Antes de criar o job, substitua todas as ocorrências pelo e-mail do seu usuário Databricks. Por exemplo, o caminho do notebook Silver de atendentes aparece assim no arquivo:
+
+```
+/Workspace/Users/your@email.com/RocketLab-case-V-Credit/02_silver/Silver_Notebook_Base_Atendentes
+```
+
+Os caminhos também pressupõem que o repositório foi clonado como Git folder na pasta do usuário, com o nome `RocketLab-case-V-Credit`. Se ele estiver em outro local, ajuste o caminho completo.
+
+### Execução bem-sucedida
+
+![Execução do job em grafo](05_jobs_pipeline/img_success_graph.png)
+
+![Execução do job em sequência](05_jobs_pipeline/img_success_sequence.png)
 
 ## Análises de negócio
 
